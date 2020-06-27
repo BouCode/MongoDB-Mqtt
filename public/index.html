@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>IoT System</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="./logo.svg" alt="" style = "width: 70%; margin-left: 20px;" />
+            </div>
+
+            <ul class="list-unstyled components">
+                <p>IoT Solutions</p>
+                <li ">
+                    <a href="#">Dashboard</a>
+    
+                </li>
+                <li>
+                    <a href="#">Sensor</a>
+                </li>
+                <li>
+                    <a href="#">Graphics</a>
+                </li>
+            </ul>
+
+    
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        
+            <div class="main">
+                <div class = "value">
+                    <div class="card border-info mb-3" style="max-width: 18rem;">
+                        <div class="card-body text-info">
+                          <h5 class="card-title">TEMPERATURA 1</h5>
+                          <p class="card-text" 
+                            id = "temperatura1"> </p>
+                        </div>
+                      </div>
+                      <div class="card border-info mb-3" style="max-width: 18rem;">
+                        <div class="card-body text-info">
+                          <h5 class="card-title">HUMEDAD 1</h5>
+                          <p class="card-text"
+                          id = "humedad1"> </p>
+                        </div>
+                      </div>
+                      <div class="card border-info mb-3" style="max-width: 18rem;">
+                        <div class="card-body text-info">
+                          <h5 class="card-title">TEMPERATURA 2</h5>
+                          <p class="card-text"
+                          id = "temperatura2"> </p>
+                        </div>
+                      </div>
+                      <div class="card border-info mb-3" style="max-width: 18rem;">
+                        <div class="card-body text-info">
+                          <h5 class="card-title">HUMEDAD 2</h5>
+                          <p class="card-text"
+                          id = "humedad2"> </p>
+                        </div>
+                      </div>
+                </div>
+                <div class = "graphics">
+                    <div class = "temperature1">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                    <div class = "humedad1">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                    <div class = "temperature2">
+                        <canvas id="myChart3"></canvas>
+                    </div>
+                    <div class = "humedad2">
+                        <canvas id="myChart4"></canvas>
+                    </div>
+                </div> 
+            </div>
+            
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+
+    <script>
+        const socket = io ();
+        const ctx1 = document.getElementById('myChart1').getContext('2d');
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+        const ctx3 = document.getElementById('myChart3').getContext('2d');
+        const ctx4 = document.getElementById('myChart4').getContext('2d');
+
+        var data1 = {
+            labels: [0],
+            datasets:[{
+                data: [0],
+                label: 'Temperatura 1',
+                borderColor: ['#e76f51'],
+                backgroundColor: ['rgba(0, 0, 0, 0)'],
+                borderWidth: 4
+            }],
+        }
+        
+        var data2 = {
+            labels: [0],
+            datasets: [{
+                data: [0],
+                label: 'Humedad 1',
+                borderColor: ['#2a9d8f'],
+                backgroundColor: ['rgba(0, 0, 0, 0)'],
+                borderWidth: 4
+            }]
+        }
+
+        var data3 = {
+            labels: [0],
+            datasets: [{
+                data: [0],
+                label: 'Temperatura 2',
+                borderColor: ['#e9c46a'],
+                backgroundColor: ['rgba(0, 0, 0, 0)'],
+                borderWidth: 4
+            }]
+        }
+        
+        var data4 = {
+            labels: [0],
+            datasets: [{
+                data: [0],
+                label: 'Humedad 2',
+                borderColor: ['#bdb2ff'],
+                backgroundColor: ['rgba(0, 0, 0, 0)'],
+                borderWidth: 4
+            }]
+        }
+
+        var myChart1 = new Chart (ctx1, {
+            type: 'line',
+            data: data1,
+        })
+        
+        var myChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: data2,
+        })
+        
+        var myChart3 = new Chart(ctx3, {
+            type: 'line',
+            data: data3,
+        })
+        
+        var myChart4 = new Chart(ctx4, {
+            type: 'line',
+            data: data4,
+        })
+
+        socket.on ('data', (datas) => {
+            const dataSensor = JSON.parse (datas);
+            
+            const temp1 = document.getElementById ('temperatura1');
+            const temp2 = document.getElementById ('temperatura2');
+            const hum1 = document.getElementById ('humedad1');
+            const hum2 = document.getElementById ('humedad2');
+
+            temp1.innerHTML = dataSensor.NODO1.data[0][0];       
+            temp2.innerHTML = dataSensor.NODO1.data[1][0];
+            hum1.innerHTML = dataSensor.NODO1.data[0][1];
+            hum2.innerHTML = dataSensor.NODO1.data[1][1];
+
+            const data_1 = data1.datasets[0].data;
+            const data_2 = data2.datasets[0].data;
+            const data_3 = data3.datasets[0].data;
+            const data_4 = data4.datasets[0].data;
+
+            data1.labels.push (moment().format ('HH:mm:ss'));
+            data_1.push (dataSensor.NODO1.data[0][0]);
+
+            data2.labels.push (moment().format ('HH:mm:ss'));
+            data_2.push (dataSensor.NODO1.data[0][1]);
+
+            data3.labels.push (moment().format ('HH:mm:ss'));
+            data_3.push (dataSensor.NODO1.data[1][0]);
+            
+            data4.labels.push (moment().format ('HH:mm:ss'));
+            data_4.push (dataSensor.NODO1.data[1][1]);
+            
+            if (data_1.length == 10 && data1.labels.length == 10) {
+                data_1.shift();
+                data1.labels.shift ();
+            }
+            if (data_2.length == 10 && data2.labels.length == 10) {
+                data_2.shift();
+                data2.labels.shift ();
+            }
+            if (data_3.length == 10 && data3.labels.length == 10) {
+                data_3.shift();
+                data3.labels.shift ();
+            }
+            if (data_4.length == 10 && data4.labels.length == 10) {
+                data_4.shift();
+                data4.labels.shift ();
+            }
+            
+
+            myChart1.update ();
+            myChart2.update ();
+            myChart3.update ();
+            myChart4.update ();
+        })
+
+    </script>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

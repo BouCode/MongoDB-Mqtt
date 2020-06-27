@@ -2,16 +2,19 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 4000;
+const path = require ('path');
+const publicPath = path.resolve (__dirname, 'public');
 
 require ('./database.js');
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(publicPath));
 
 const client = require ('./mqtt/index.js');
 
 app.get('/', (req, res) => {
-    res.sendFile (__dirname + '/index.html')
+    res.sendFile (__dirname + '/public/index.html')
   })
   
 const sensorData = require ('./models/dataSensor')
