@@ -24,8 +24,8 @@ client.on('message', function (topic, message) {
       data: dataSensor
     })
   // newData.save();
-  console.log(newData);
-  console.log(newData.date);
+  //console.log(newData);
+  //console.log(newData.date);
 
   io.emit('data', dataSensor);
   io.emit('time', newData.date);
