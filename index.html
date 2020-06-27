@@ -20,7 +20,8 @@
         </nav>
     </div>
     <div>
-        <h1>Hola mundo</h1>
+        <h1>Temperatura:</h1>
+        <h2 id = "temperatura1">12</h2>
     </div>
     <button onClick = "on()" type="button" class="btn btn-primary">Encender</button>
     <button onClick = "off()" type="button" class="btn btn-danger">Apagar</button>
@@ -65,7 +66,8 @@
         socket.on ('data', (datas) => {
             const dataSensor = JSON.parse (datas);
             console.log (dataSensor.NODO1.data[0][0])
-           
+            let temp = document.getElementById  ('temperatura1')
+            temp.innerHTML = dataSensor.NODO1.data[0][0]
 
             data.labels.push (moment().format('HH:mm:ss'));
             data.datasets[0].data.push (dataSensor.NODO1.data[0][0])
