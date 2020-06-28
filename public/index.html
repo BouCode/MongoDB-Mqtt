@@ -71,6 +71,34 @@
         
             <div class="main">
                 <div class = "value">
+                    <div>
+                        <h5>Foco 1</h5>
+                        <label class = "switch">
+                            <input type = "checkbox" id = "led1" onclick="led1()" >
+                                <span class = "slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <h5>Foco 2</h5>
+                        <label class = "switch">
+                            <input type = "checkbox" id = "led2" onclick="led2()">
+                                <span class = "slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <h5>Foco 3</h5>
+                        <label class = "switch">
+                            <input type = "checkbox" id = "led3" onclick="led3()">
+                                <span class = "slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <h5>Foco 4</h5>
+                        <label class = "switch" id = "led4" onclick="led4()">
+                            <input type = "checkbox">
+                                <span class = "slider"></span>
+                        </label>
+                    </div>
                     <div class="card border-info mb-3" style="max-width: 18rem;">
                         <div class="card-body text-info">
                           <h5 class="card-title">TEMPERATURA 1</h5>
@@ -124,10 +152,57 @@
 
     <script>
         const socket = io ();
+
         const ctx1 = document.getElementById('myChart1').getContext('2d');
         const ctx2 = document.getElementById('myChart2').getContext('2d');
         const ctx3 = document.getElementById('myChart3').getContext('2d');
         const ctx4 = document.getElementById('myChart4').getContext('2d');
+
+        const checkbox1 = document.getElementById ('led1');
+        const checkbox2 = document.getElementById ('led2');
+        const checkbox3 = document.getElementById ('led3');
+        const checkbox4 = document.getElementById ('led4');
+        
+        function led1(){
+            if (checkbox1.checked) {
+                const data = "Encendido"
+                socket.emit ('button', data);
+            }
+            else {
+                const data = "Apagado"
+                socket.emit ('button', data);
+            }
+        }
+
+        function led2(){
+            if (checkbox2.checked)
+            {
+                console.log ('Encendido')
+            }
+            else {
+                console.log ('Apagado')
+            }
+        }
+
+        function led3(){
+            if (checkbox3.checked)
+            {
+                console.log ('Encendido')
+            }
+            else {
+                console.log ('Apagado')
+            }
+        }
+        
+        function led4(){
+            if (checkbox4.checked)
+            {
+                console.log ('Encendido')
+            }
+            else {
+                console.log ('Apagado')
+            }
+        }
 
         var data1 = {
             labels: [0],
